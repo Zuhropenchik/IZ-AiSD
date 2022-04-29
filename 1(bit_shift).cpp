@@ -1,7 +1,5 @@
 #include <iostream>
-int main() {
-    unsigned int value;
-    std::cin >> value;
+unsigned short bit_num(unsigned int value){
     bool i = false;
     unsigned short num = 0;
     unsigned int temp;
@@ -14,7 +12,12 @@ int main() {
         else
             i = true;
         value = value >> 1;
-    }
-    std::cout << num;
+    }    
+    return num;
+}
+int main() {
+    unsigned int value;
+    std::cin >> value;
+    std::cout << bit_num(value);
     return 0;
 }
