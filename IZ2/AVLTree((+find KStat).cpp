@@ -42,14 +42,10 @@ public:
 
     ~BinaryTree();
 
-    TreeNode<T> *getRoot();
-    void changeRoot(TreeNode<T> * node);
 
-    TreeNode<T> *insert(TreeNode<T> *node, T _key);
-
-    TreeNode<T> *erase(TreeNode<T> *node, T _key);
-
-    int count(TreeNode<T> *node);
+    void Add(T _key);
+    void Delete(T _key);
+    T findKStatI(int k);
 
     T findKStat(TreeNode<T> *node, int k, int curr_stat);
 
@@ -58,20 +54,25 @@ private:
     int getHeight(TreeNode<T> *node);
     void fixHeight(TreeNode<T> *node);
     int balance_factor(TreeNode<T> *node);
+    TreeNode<T> *insert(TreeNode<T> *node, T _key);
+
 
     TreeNode<T> *leftRotate(TreeNode<T> *node);
     TreeNode<T> *rightRotate(TreeNode<T> *node);
     TreeNode<T> *Balancing(TreeNode<T> *node);
 
+    TreeNode<T> *erase(TreeNode<T> *node, T _key);
     TreeNode<T> * findMin(TreeNode<T> *node);
     TreeNode<T> * eraseMin(TreeNode<T> *node);
 
     int left_count(TreeNode<T> *node);
     int right_count(TreeNode<T> *node);
+    int count(TreeNode<T> *node);
 
     TreeNode<T> *root;
     C cmp;
 };
+
 
 template<class T, class C>
 BinaryTree<T, C>::BinaryTree(C &_cmp):
@@ -84,22 +85,28 @@ BinaryTree<T, C>::~BinaryTree(){
 }
 
 template<class T, class C>
+void BinaryTree<T, C>::Add(T _key){
+    root = insert(root, _key);
+}
+
+template<class T, class C>
+void BinaryTree<T, C>::Delete(T _key){
+    root = erase(root, _key);
+}
+
+template<class T, class C>
+T BinaryTree<T, C>::findKStatI(int k){
+    return findKStat(root, k, 0);
+}
+
+
+template<class T, class C>
 void BinaryTree<T,C>::deleteNode(TreeNode<T> *node){
     if(!node)
         return;
     deleteNode(node->left);
     deleteNode(node->right);
     delete node;
-}
-
-template<class T, class C>
-TreeNode<T> *BinaryTree<T, C>::getRoot() {
-    return root;
-}
-
-template<class T, class C>
-void BinaryTree<T,C>::changeRoot(TreeNode<T> * node){
-    root = node;
 }
 
 template<class T, class C>
@@ -262,11 +269,11 @@ int main() {
         int temp, kstat;
         std::cin >> temp >> kstat;
         if (temp > 0) {
-            tree.changeRoot(tree.insert(tree.getRoot(), temp));
+            tree.Add(temp);
         }
         if (temp < 0)
-            tree.changeRoot(tree.erase(tree.getRoot(), -1* temp));
-        std::cout << tree.findKStat(tree.getRoot(), kstat, 0) << ' ';
+            tree.Delete(-1* temp);
+        std::cout << tree.findKStatI(kstat) << ' ';
     }
     return 0;
 }
