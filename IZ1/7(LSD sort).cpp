@@ -34,6 +34,7 @@ void Count_Sort(long long *a, long long * copy, int n, int r){
         temp[(int)*t]--;
     }
     Copy(copy, a, n);
+    delete[] temp;
 }
 void Radix_Sort(long long* a, long long * copy, int n) {
     for(int i=0;i<sizeof(long long); i++)
@@ -49,5 +50,6 @@ int main() {
     Radix_Sort(a, copy, n);
     output_array(a,n);
     delete[] a;
+    delete[] copy;
     return 0;
 }
