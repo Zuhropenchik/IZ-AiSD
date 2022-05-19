@@ -51,18 +51,6 @@ public:
     bool Delete(const T &key);
 
 
-//    void print() {
-//        for (size_t i = 0; i < table.size(); i++) {
-//            if (table[i].isEmpty)
-//                std::cout << "_ ";
-//            else if (table[i].isDeleted)
-//                std::cout << "D:" << table[i].key << " ";
-//            else
-//                std::cout << table[i].key << " ";
-//        }
-//        std::cout << "Count: " << keysCount << ' ';
-//    }
-
 };
 
 template<class T, class H>
@@ -84,7 +72,7 @@ bool HashTable<T, H>::Has(const T &key) {
 
 template<class T, class H>
 bool HashTable<T, H>::Add(const T &key) {
-    if (4 * (keysCount + deletedCount) > 3 * table.size()) {
+    if (4 * (keysCount) > 3 * table.size() || 2 * deletedCount > table.size() - keysCount) { // нужно ли перехэшировать?
         growTable();
     }
     unsigned int hash = hasher(key) % table.size();
@@ -118,8 +106,8 @@ bool HashTable<T, H>::Delete(const T &key) {
 template<class T, class H>
 void HashTable<T, H>::growTable() {
     size_t newTableSize = table.size();
-    if (4 * keysCount > 3 * table.size())
-        newTableSize *= 2;
+    if (4 * keysCount > 3 * table.size()) // если таблицу нужно расширять, увеличиваем новый размер, если нет, то
+        newTableSize *= 2;               // перехэшируем со старым размером
 
     vector<Node> oldTable = std::move(table);
     vector<Node> newTable(newTableSize);
