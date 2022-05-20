@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stack>
+#include <vector>
 using std::stack;
+using std::vector;
 struct Int_Compare{
     bool operator()(const int&f, const int&s){
         return f>=s;
@@ -34,7 +36,7 @@ public:
     explicit BinaryTree(C & _cmp);
     ~BinaryTree();
     void insert(T _key);
-    void post_order();
+    vector<T> post_order();
 private:
     void add_right(stack<TreeNode<T>*> &left_stack,stack<TreeNode<T>*> & stack, TreeNode<T> * current);
     TreeNode<T> * root;
@@ -103,9 +105,10 @@ void BinaryTree<T,C>::add_right(stack<TreeNode<T>*> & left_stack,stack<TreeNode<
 }
 
 template<class T,class C>
-void BinaryTree<T,C>::post_order() {
+vector<T> BinaryTree<T,C>::post_order() {
+    vector<T> res;
     if (!root)
-        return;
+        return res;
     stack<TreeNode<T>*> left_storage;
     stack<TreeNode<T>*> storage;
     TreeNode<T>* curr = root;
@@ -117,9 +120,11 @@ void BinaryTree<T,C>::post_order() {
             curr = left_storage.top();
     }
     while(!storage.empty()){
-        std::cout << storage.top()->data << ' ';
+        res.push_back(storage.top()->data);
+        //std::cout << storage.top()->data << ' ';
         storage.pop();
     }
+    return res;
 }
 
 int main(){
@@ -132,6 +137,8 @@ int main(){
         std::cin >> temp;
         tree.insert(temp);
     }
-    tree.post_order();
+    vector<int> res = tree.post_order();
+    for(auto i : res)
+        std::cout << i << ' ';
     return 0;
 }
