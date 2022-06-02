@@ -23,7 +23,7 @@ void BFS(const IGraph &graph, int vertex, void (*visit)(int)) {
     }
 }
 int main() {
-    IGraph * graph = new SetGraph(6);
+    IGraph * graph = new ListGraph(6);
     graph->AddEdge(1,3);
     graph->AddEdge(2,1);
     graph->AddEdge(2,3);
@@ -32,7 +32,7 @@ int main() {
     graph->AddEdge(4,5);
     graph->AddEdge(5,3);
     graph->AddEdge(5,4);
-    BFS(*graph, 1, [](int v){std::cout << v << ' ';});
+    BFS(*graph, 2, [](int v){std::cout << v << ' ';});
     delete graph;
     return 0;
 }
