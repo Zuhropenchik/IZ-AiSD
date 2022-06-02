@@ -1,20 +1,26 @@
 #ifndef GRAPHS_LISTGRAPH_H
 #define GRAPHS_LISTGRAPH_H
+
 #include "IGraph.h"
 #include <vector>
 #include "cassert"
+
 using std::vector;
+
 class ListGraph : public IGraph {
 public:
-    ListGraph(int count);
-    ListGraph(const IGraph& graph);
+    explicit ListGraph(int count);
 
-    virtual void AddEdge(int from, int to) override;
+    explicit ListGraph(const IGraph &graph);
 
-    virtual int VerticesCount() const  override;
+    void AddEdge(int from, int to) override;
 
-    virtual std::vector<int> GetNextVertices(int vertex) const override;
-    virtual std::vector<int> GetPrevVertices(int vertex) const override;
+    int VerticesCount() const override;
+
+    std::vector<int> GetNextVertices(int vertex) const override;
+
+    std::vector<int> GetPrevVertices(int vertex) const override;
+
 private:
     vector<vector<int>> adjList;
 };

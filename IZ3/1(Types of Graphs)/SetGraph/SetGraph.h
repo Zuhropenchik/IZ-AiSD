@@ -1,22 +1,28 @@
 #ifndef GRAPHS_SETGRAPH_H
 #define GRAPHS_SETGRAPH_H
+
 #include"IGraph.h"
 #include<unordered_map>
 #include<unordered_set>
 #include"cassert"
+
 using std::unordered_map;
 using std::unordered_set;
+
 class SetGraph : public IGraph {
 public:
-    SetGraph(int count);
-    SetGraph(const IGraph& graph);
+    explicit SetGraph(int count);
 
-    virtual void AddEdge(int from, int to) override;
+    explicit SetGraph(const IGraph &graph);
 
-    virtual int VerticesCount() const  override;
+    void AddEdge(int from, int to) override;
 
-    virtual std::vector<int> GetNextVertices(int vertex) const override;
-    virtual std::vector<int> GetPrevVertices(int vertex) const override;
+    int VerticesCount() const override;
+
+    std::vector<int> GetNextVertices(int vertex) const override;
+
+    std::vector<int> GetPrevVertices(int vertex) const override;
+
 private:
     vector<unordered_set<int>> adjList;
 };
