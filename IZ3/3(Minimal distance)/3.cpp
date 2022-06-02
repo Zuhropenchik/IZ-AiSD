@@ -2,7 +2,7 @@
 #include<vector>
 #include<queue>
 #include<cassert>
-
+using std::pair;
 using std::vector;
 using std::queue;
 
@@ -13,11 +13,9 @@ struct IGraph {
 
     virtual int VerticesCount() const = 0;
 
-    virtual std::vector<int> GetNextVertices(int vertex) const = 0;
+    virtual std::vector<std::pair<int, int>> GetNextVertices(int vertex) const = 0;
 
     virtual std::vector<int> GetPrevVertices(int vertex) const = 0;
-
-    virtual std::vector<int> GetDistances(int vertex) const = 0;
 
 protected:
     bool isOriented;
@@ -34,34 +32,40 @@ public:
 
     int VerticesCount() const override;
 
-    std::vector<int> GetNextVertices(int vertex) const override;
+    std::vector<std::pair<int, int>> GetNextVertices(int vertex) const override;
 
     std::vector<int> GetPrevVertices(int vertex) const override;
 
-    std::vector<int> GetDistances(int vertex) const override;
-
 private:
-    vector<vector<int>> adjList;
-    vector<vector<int>> distances;
+    vector<vector<pair<int, int>>> adjList;
 };
 
 ListGraph::ListGraph(int count) {
     adjList.resize(count);
-    distances.resize(count);
-    for(auto& i: distances){
-        i.resize(count);
-    }
     isOriented = false;
 }
 
 void ListGraph::AddEdge(int from, int to, int weight) {
     assert(from >= 0 && from < adjList.size());
     assert(to >= 0 && to < adjList.size());
-    adjList[from].push_back(to);
-    distances[from][to] = weight;
+//    for(auto& i: GetNextVertices(from)){
+//        if(i.first == to) {
+//            if(i.second > weight) {
+//                i.second = weight;
+//                if(!isOriented) {
+//                    for (auto &j: GetNextVertices(to)) {
+//                        if (j.first == from) {
+//                            j.second = weight;
+//                        }
+//                    }
+//                }
+//            }
+//            return;
+//        }
+//    }
+    adjList[from].push_back(std::make_pair(to, weight));
     if (!isOriented) {
-        adjList[to].push_back(from);
-        distances[to][from] = weight;
+        adjList[to].push_back(std::make_pair(from, weight));
     }
 }
 
@@ -69,7 +73,7 @@ int ListGraph::VerticesCount() const {
     return adjList.size();
 }
 
-std::vector<int> ListGraph::GetNextVertices(int vertex) const {
+std::vector<std::pair<int, int>> ListGraph::GetNextVertices(int vertex) const {
     assert(vertex >= 0 && vertex < adjList.size());
     return adjList[vertex];
 }
@@ -79,38 +83,29 @@ std::vector<int> ListGraph::GetPrevVertices(int vertex) const {
     vector<int> prevVertices;
     for (int from = 0; from < adjList.size(); ++from) {
         for (int i = 0; i < adjList[from].size(); ++i) {
-            if (adjList[from][i] == vertex)
+            if (adjList[from][i].first == vertex)
                 prevVertices.push_back(from);
         }
     }
     return prevVertices;
 }
-std::vector<int> ListGraph::GetDistances(int vertex) const{
-    return distances[vertex];
-}
 int minimum_distance(const IGraph &graph, int source, int destination) {
-    vector<bool> visited(graph.VerticesCount(), false);
-    vector<int> min_dist(graph.VerticesCount(), 0);
-    queue<int> bfsQueue;
-    bfsQueue.push(source);
-    visited[source] = true;
-    while (!bfsQueue.empty()) {
-        int current = bfsQueue.front();
-        if(current==destination){
-            return min_dist[current];
-        }
-        bfsQueue.pop();
-        vector<int> adjList = graph.GetNextVertices(current);
-        vector<int> distList = graph.GetDistances(current);
-        for (int i = 0; i < adjList.size(); ++i) {
-            if (!visited[adjList[i]]) {
-                min_dist[i]+=distList[i];
-                bfsQueue.push(adjList[i]);
-                visited[adjList[i]] = true;
+    vector<int> minDist(graph.VerticesCount(), 0);
+    queue<int> tempQueue;
+    tempQueue.push(source);
+    minDist[source] = 0;
+    int current = 0;
+    while (!tempQueue.empty()) {
+        current = tempQueue.front();
+        tempQueue.pop();
+        for (auto &i: graph.GetNextVertices(current)) {
+            if ((minDist[i.first] == 0 && i.first != source) || minDist[i.first] > minDist[current] + i.second) {
+                minDist[i.first] = minDist[current] + i.second;
+                tempQueue.push(i.first);
             }
         }
     }
-    return  -1;
+    return minDist[destination];
 }
 
 int main() {
