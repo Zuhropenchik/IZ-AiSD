@@ -8,7 +8,7 @@ void BFS(const IGraph &graph, int vertex, void (*visit)(int)) {
     queue<int> bfsQueue;
     bfsQueue.push(vertex);
     visited[vertex] = true;
-    while (bfsQueue.size() > 0) {
+    while (!bfsQueue.empty()) {
         int current = bfsQueue.front();
         bfsQueue.pop();
         visit(current);
