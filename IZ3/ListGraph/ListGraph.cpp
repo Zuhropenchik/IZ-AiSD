@@ -1,5 +1,4 @@
 #include "ListGraph.h"
-#include "cassert"
 
 ListGraph::ListGraph(int count) {
     adjList.resize(count);

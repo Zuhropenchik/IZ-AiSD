@@ -2,6 +2,7 @@
 #define GRAPHS_LISTGRAPH_H
 #include "IGraph.h"
 #include <vector>
+#include "cassert"
 using std::vector;
 class ListGraph : public IGraph {
 public:
@@ -16,7 +17,6 @@ public:
     virtual std::vector<int> GetPrevVertices(int vertex) const override;
 private:
     vector<vector<int>> adjList;
-    vector<vector<int>> prevList;
 };
 
 

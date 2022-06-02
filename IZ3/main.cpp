@@ -1,7 +1,29 @@
 #include <iostream>
 #include "ListGraph.h"
+#include "MatrixGraph.h"
+#include "ArcGraph.h"
+#include "SetGraph.h"
+void BFS(const IGraph &graph, int vertex, void (*visit)(int)) {
+    vector<bool> visited(graph.VerticesCount(), false);
+    queue<int> bfsQueue;
+    bfsQueue.push(vertex);
+    visited[vertex] = true;
+    while (bfsQueue.size() > 0) {
+        int current = bfsQueue.front();
+        bfsQueue.pop();
+        visit(current);
+        vector<int> adjList = graph.GetNextVertices(current);
+        for (int i = 0; i < adjList.size(); ++i) {
+            if (!visited[adjList[i]]) {
+                bfsQueue.push(adjList[i]);
+                visited[adjList[i]] = true;
+            }
+        }
+
+    }
+}
 int main() {
-    IGraph * graph = new ListGraph(6);
+    IGraph * graph = new SetGraph(6);
     graph->AddEdge(1,3);
     graph->AddEdge(2,1);
     graph->AddEdge(2,3);
