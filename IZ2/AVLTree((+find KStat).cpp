@@ -161,6 +161,7 @@ TreeNode<T> *BinaryTree<T, C>::erase(TreeNode<T> *node, T _key) {
             balancing = Balancing(balancing);
             balancing = balancing->left;
         }
+        delete min;
     }
     return Balancing(node);
 }
