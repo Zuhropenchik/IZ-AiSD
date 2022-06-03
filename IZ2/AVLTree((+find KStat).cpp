@@ -1,7 +1,4 @@
 #include <iostream>
-#include <stack>
-
-using std::stack;
 
 struct Int_Compare {
     bool operator()(const int &f, const int &s) {
@@ -44,29 +41,39 @@ public:
 
 
     void Add(T _key);
+
     void Delete(T _key);
+
     T findKStatI(int k);
 
     T findKStat(TreeNode<T> *node, int k, int curr_stat);
 
 private:
-    void deleteNode(TreeNode<T> * node);
+    void deleteNode(TreeNode<T> *node);
+
     int getHeight(TreeNode<T> *node);
+
     void fixHeight(TreeNode<T> *node);
+
     int balance_factor(TreeNode<T> *node);
+
     TreeNode<T> *insert(TreeNode<T> *node, T _key);
 
 
     TreeNode<T> *leftRotate(TreeNode<T> *node);
+
     TreeNode<T> *rightRotate(TreeNode<T> *node);
+
     TreeNode<T> *Balancing(TreeNode<T> *node);
 
     TreeNode<T> *erase(TreeNode<T> *node, T _key);
-    TreeNode<T> * findMin(TreeNode<T> *node);
-    TreeNode<T> * eraseMin(TreeNode<T> *node);
+
+    TreeNode<T> *findAndEraseMin(TreeNode<T> *node);
 
     int left_count(TreeNode<T> *node);
+
     int right_count(TreeNode<T> *node);
+
     int count(TreeNode<T> *node);
 
     TreeNode<T> *root;
@@ -80,29 +87,29 @@ BinaryTree<T, C>::BinaryTree(C &_cmp):
         cmp(_cmp) {}
 
 template<class T, class C>
-BinaryTree<T, C>::~BinaryTree(){
+BinaryTree<T, C>::~BinaryTree() {
     deleteNode(root);
 }
 
 template<class T, class C>
-void BinaryTree<T, C>::Add(T _key){
+void BinaryTree<T, C>::Add(T _key) {
     root = insert(root, _key);
 }
 
 template<class T, class C>
-void BinaryTree<T, C>::Delete(T _key){
+void BinaryTree<T, C>::Delete(T _key) {
     root = erase(root, _key);
 }
 
 template<class T, class C>
-T BinaryTree<T, C>::findKStatI(int k){
+T BinaryTree<T, C>::findKStatI(int k) {
     return findKStat(root, k, 0);
 }
 
 
 template<class T, class C>
-void BinaryTree<T,C>::deleteNode(TreeNode<T> *node){
-    if(!node)
+void BinaryTree<T, C>::deleteNode(TreeNode<T> *node) {
+    if (!node)
         return;
     deleteNode(node->left);
     deleteNode(node->right);
@@ -123,39 +130,37 @@ TreeNode<T> *BinaryTree<T, C>::insert(TreeNode<T> *node, T _key) {
 }
 
 template<class T, class C>
-TreeNode<T> * BinaryTree<T, C>::findMin(TreeNode<T> *node){
-    if(!node)
+TreeNode<T> *BinaryTree<T, C>::findAndEraseMin(TreeNode<T> *node) {
+    if (!node)
         return nullptr;
-    else if(!node->left)
-        return node;
-    else
-        return findMin(node->left);
+    else if (!node->left) {
+        TreeNode<T> * min = node;
+        node = node->right;
+        return min;
+    }
+    return findAndEraseMin(node->left);
 }
 
-template<class T, class C>
-TreeNode<T> * BinaryTree<T, C>::eraseMin(TreeNode<T> *node){
-    if(!node->left)
-        return node->right;
-    node->left = eraseMin(node->left);
-    return Balancing(node);
-}
+
 
 template<class T, class C>
 TreeNode<T> *BinaryTree<T, C>::erase(TreeNode<T> *node, T _key) {
-    if(!node)
+    if (!node)
         return nullptr;
-    if(_key < node->data)
-        node->left = erase(node->left,_key);
-    else if(_key > node->data)
-        node->right = erase(node->right,_key);
-    else
-    {
-        if(!node->right) return node->left;
-        TreeNode<T> * min = findMin(node->right);
-        min->right = eraseMin(node->right);
-        min->left = node->left;
-        delete node;
-        return Balancing(min);
+    if (_key < node->data)
+        node->left = erase(node->left, _key);
+    else if (_key > node->data)
+        node->right = erase(node->right, _key);
+    else {
+        if (!node->right)
+            return node->left;
+        TreeNode<T> *min = findAndEraseMin(node->right);
+        node->data = min->data;
+        TreeNode<T> * balancing = node->right;
+        while(balancing){
+            balancing = Balancing(balancing);
+            balancing = balancing->left;
+        }
     }
     return Balancing(node);
 }
@@ -272,7 +277,7 @@ int main() {
             tree.Add(temp);
         }
         if (temp < 0)
-            tree.Delete(-1* temp);
+            tree.Delete(-1 * temp);
         std::cout << tree.findKStatI(kstat) << ' ';
     }
     return 0;
