@@ -2,7 +2,7 @@
 #include"BTree.h"
 struct Int_Compare {
     bool operator()(const int &f, const int &s) {
-        return f >= s;
+        return f < s;
     }
 };
 /*2 10
@@ -22,10 +22,12 @@ int main(){
     Int_Compare cmp;
     int n,m, temp;
     std::cin >> n >> m;
-    BTree<int, Int_Compare> tree(cmp, n);
+    auto* tree = new BTree<int, Int_Compare>(cmp, n);
     for(int i=0; i<m; ++i){
         std::cin >> temp;
-        tree.Add(temp);
+        tree->Add(temp);
     }
+    tree->BFS();
+    delete tree;
     return 0;
 }
