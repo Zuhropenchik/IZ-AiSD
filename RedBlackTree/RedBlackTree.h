@@ -27,7 +27,7 @@ public:
     void Add(T _key);
 
     void Delete(T _key);
-    
+
 private:
     void delete_node(TreeNode<T> *key);
 
